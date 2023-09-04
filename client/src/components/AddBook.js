@@ -1,18 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
 
-const getAuthorsQuery = gql`
- {
-  authors {
-    name
-    id
-  }
-}
-`
+import { getAuthorsQuery } from '../queries/queries';
+
 const AddBook = () => {
     const { loading, error, data} = useQuery(getAuthorsQuery);
-    console.log(loading);
-    console.log(error);
-    console.log(data);
     const getAuthorsList = () => {
         if (loading) {
             return <option disabled>Loading Authors...</option>
