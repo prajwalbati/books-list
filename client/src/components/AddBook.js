@@ -10,7 +10,7 @@ const AddBook = () => {
         authorId: ""
     });
     const { loading, error, data} = useQuery(getAuthorsQuery);
-    const [ addBook, {} ] = useMutation(addBookMutation);
+    const [ addBook ] = useMutation(addBookMutation);
     const getAuthorsList = () => {
         if (loading) {
             return <option disabled>Loading Authors...</option>
