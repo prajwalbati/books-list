@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries';
 
-const AddBook = ({ displayForm }) => {
+const AddAuthor = ({ displayForm }) => {
     const [ bookData, setBookData ] = useState({
         name: "",
         genre: "",
@@ -30,21 +30,14 @@ const AddBook = ({ displayForm }) => {
     };
 
     return (
-        <form id="add-book" onSubmit={submitForm} className={displayForm==='book'?``:`hidden`}>
+        <form id="add-author" onSubmit={submitForm} className={displayForm==='author'?``:`hidden`}>
             <div className="field">
-                <label>Book Name:</label>
+                <label>Author Name:</label>
                 <input type="text" onChange={(e) => setBookData({...bookData, name: e.target.value})} />
             </div>
             <div className="field">
-                <label>Genre:</label>
+                <label>Age:</label>
                 <input type="text" onChange={(e) => setBookData({...bookData, genre: e.target.value})} />
-            </div>
-            <div className="field">
-                <label>Author:</label>
-                <select onChange={(e) => setBookData({...bookData, authorId: e.target.value})} >
-                    <option>Select Author</option>
-                    {getAuthorsList()}
-                </select>
             </div>
             <button type="submit">+</button>
         </form>
@@ -52,4 +45,4 @@ const AddBook = ({ displayForm }) => {
 
 };
 
-export default AddBook;
+export default AddAuthor;

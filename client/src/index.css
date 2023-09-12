@@ -30,6 +30,10 @@ body{
   color: #880E4F;
 }
 
+.hidden {
+  display: none;
+}
+
 form{
   background: #fff;
   padding: 20px;
