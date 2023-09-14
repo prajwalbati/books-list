@@ -34,13 +34,36 @@ body{
   display: none;
 }
 
-form{
-  background: #fff;
-  padding: 20px;
+.addItemForm {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 400px;
+}
+
+.addButton {
+  margin: 10px;
+}
+
+.addButton button {
+  padding: 5px 10px;
+  margin: 10px;
+  background-color: darkcyan;
+  color:#FFF;
+  border-color: darkcyan;
+}
+
+.addAuthor {
+  background: #fff;
+  padding: 20px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 form .field{
@@ -60,17 +83,18 @@ form input, form select{
   box-sizing: border-box;
 }
 
+.actions {
+  text-align: right;
+}
+
 form button{
+  margin: 10px;
   color: #fff;
-  font-size: 2em;
+  font-size: 14px;
   background: #AD1457;
   border: 0;
-  padding: 0 10px;
-  border-radius: 50%;
+  padding: 5px 10px;
   cursor: pointer;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
 }
 
 #book-details{
@@ -85,4 +109,11 @@ form button{
   box-shadow: -2px -3px 5px rgba(0,0,0,0.3);
   box-sizing: border-box;
   color: #fff;
+}
+
+.error {
+  color: red;
+}
+.success {
+  color: green;
 }

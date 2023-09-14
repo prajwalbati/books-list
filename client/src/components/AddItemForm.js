@@ -12,10 +12,10 @@ const AddItemForm = () => {
     };
 
     return (
-        <div>
-            <AddButton showAddForm={showAddForm} />
-            <AddBook displayForm={displayForm} />
-            <AddAuthor displayForm={displayForm}  />
+        <div className="addItemForm">
+            <AddButton displayForm={displayForm} showAddForm={showAddForm} />
+            <AddBook displayForm={displayForm} showAddForm={showAddForm} />
+            <AddAuthor displayForm={displayForm} showAddForm={showAddForm} />
         </div>
     );
 };

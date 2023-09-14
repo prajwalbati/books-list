@@ -1,46 +1,71 @@
-import { useQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 
-import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries';
+import { getAuthorsQuery, addAuthorMutation } from '../queries/queries';
 
-const AddAuthor = ({ displayForm }) => {
-    const [ bookData, setBookData ] = useState({
-        name: "",
-        genre: "",
-        authorId: ""
+const AddAuthor = ({ displayForm, showAddForm }) => {
+    const [ authorData, setAuthorData ] = useState({
+        name: ""
     });
-    const { loading, error, data} = useQuery(getAuthorsQuery);
-    const [ addBook ] = useMutation(addBookMutation);
-    const getAuthorsList = () => {
-        if (loading) {
-            return <option disabled>Loading Authors...</option>
-        } else {
-            return data.authors && data.authors.map(author => {
-                return <option key={author.id} value={author.id}>{author.name}</option>;
-            });
-        }
+    const [ successMessage, setSuccessMessage ] = useState("");
+    const [ errorMessage, setErrorMessage ] = useState("");
+    const [ addAuthor, {loading, error} ] = useMutation(addAuthorMutation);
+
+    const updateAuthorData = (e) => {
+        let value = e.target.name === "age" ? Number(e.target.value) : e.target.value;
+        setAuthorData({...authorData, [e.target.name]: value});
     };
 
-    const submitForm = (e) => {
+    const submitForm = async(e) => {
         e.preventDefault();
-        addBook({
-            variables: bookData,
-            refetchQueries: [{query: getBooksQuery}]
+        setSuccessMessage("");
+        setErrorMessage("");
+        if (!authorData.name) {
+            setErrorMessage("Author Name is Required");
+            return;
+        }
+        if (!authorData.age) {
+            setErrorMessage("Age is Required");
+            return;
+        }
+        if (!Number(authorData.age)) {
+            setErrorMessage("Age must be number");
+            return;
+        }
+        addAuthor({
+            variables: authorData,
+            refetchQueries: [{query: getAuthorsQuery}]
+        }).then(data => {
+            setSuccessMessage("Author added successfully");
+            setAuthorData({
+                name: "",
+                age: ""
+            });
+        }).catch(e => {
+            setErrorMessage(e.message);
         });
     };
 
     return (
-        <form id="add-author" onSubmit={submitForm} className={displayForm==='author'?``:`hidden`}>
-            <div className="field">
-                <label>Author Name:</label>
-                <input type="text" onChange={(e) => setBookData({...bookData, name: e.target.value})} />
-            </div>
-            <div className="field">
-                <label>Age:</label>
-                <input type="text" onChange={(e) => setBookData({...bookData, genre: e.target.value})} />
-            </div>
-            <button type="submit">+</button>
-        </form>
+        <div className={`addAuthor ${displayForm==='author'?``:`hidden`}`}>
+            <h3 className="text-center">Add Author</h3>
+            <form onSubmit={submitForm}>
+                <div className="field">
+                    <label>Author Name:</label>
+                    <input name="name" type="text" value={authorData.name} onChange={updateAuthorData} />
+                </div>
+                <div className="field">
+                    <label>Age:</label>
+                    <input name="age" type="number" value={authorData.age} onChange={updateAuthorData} />
+                </div>
+                <p className="success text-right">{successMessage}</p>
+                <p className="error text-right">{errorMessage}</p>
+                <div className="actions">
+                    <button type="submit">{loading ? 'Adding...':'Add'}</button>
+                    <button type="button" onClick={() => showAddForm('')}>Cancel</button>
+                </div>
+            </form>
+        </div>
     );
 
 };
