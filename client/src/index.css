@@ -87,6 +87,10 @@ form input, form select{
   text-align: right;
 }
 
+button {
+  cursor: pointer;
+}
+
 form button{
   margin: 10px;
   color: #fff;
@@ -94,7 +98,6 @@ form button{
   background: #AD1457;
   border: 0;
   padding: 5px 10px;
-  cursor: pointer;
 }
 
 #book-details{

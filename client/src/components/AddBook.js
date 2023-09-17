@@ -3,19 +3,22 @@ import { useState } from 'react';
 
 import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries';
 
-const AddBook = ({ displayForm }) => {
+const AddBook = ({ displayForm, showAddForm }) => {
     const [ bookData, setBookData ] = useState({
         name: "",
         genre: "",
         authorId: ""
     });
-    const { loading, error, data} = useQuery(getAuthorsQuery);
-    const [ addBook ] = useMutation(addBookMutation);
+    const [ successMessage, setSuccessMessage ] = useState("");
+    const [ errorMessage, setErrorMessage ] = useState("");
+    const authorData = useQuery(getAuthorsQuery);
+    const [ addBook, {loading, error} ] = useMutation(addBookMutation);
+
     const getAuthorsList = () => {
-        if (loading) {
+        if (authorData.loading) {
             return <option disabled>Loading Authors...</option>
         } else {
-            return data.authors && data.authors.map(author => {
+            return authorData.data.authors && authorData.data.authors.map(author => {
                 return <option key={author.id} value={author.id}>{author.name}</option>;
             });
         }
@@ -23,9 +26,32 @@ const AddBook = ({ displayForm }) => {
 
     const submitForm = (e) => {
         e.preventDefault();
+        setSuccessMessage("");
+        setErrorMessage("");
+        if (!bookData.name) {
+            setErrorMessage("Book Name is Required");
+            return;
+        }
+        if (!bookData.genre) {
+            setErrorMessage("Genre is Required");
+            return;
+        }
+        if (!bookData.authorId) {
+            setErrorMessage("Author is Required");
+            return;
+        }
         addBook({
             variables: bookData,
             refetchQueries: [{query: getBooksQuery}]
+        }).then(data => {
+            setSuccessMessage("Book added successfully");
+            setBookData({
+                name: "",
+                genre: "",
+                authorId: ""
+            });
+        }).catch(e => {
+            setErrorMessage(e.message);
         });
     };
 
@@ -33,20 +59,25 @@ const AddBook = ({ displayForm }) => {
         <form id="add-book" onSubmit={submitForm} className={displayForm==='book'?``:`hidden`}>
             <div className="field">
                 <label>Book Name:</label>
-                <input type="text" onChange={(e) => setBookData({...bookData, name: e.target.value})} />
+                <input type="text" value={bookData.name} onChange={(e) => setBookData({...bookData, name: e.target.value})} />
             </div>
             <div className="field">
                 <label>Genre:</label>
-                <input type="text" onChange={(e) => setBookData({...bookData, genre: e.target.value})} />
+                <input type="text" value={bookData.genre} onChange={(e) => setBookData({...bookData, genre: e.target.value})} />
             </div>
             <div className="field">
                 <label>Author:</label>
-                <select onChange={(e) => setBookData({...bookData, authorId: e.target.value})} >
+                <select value={bookData.authorId} onChange={(e) => setBookData({...bookData, authorId: e.target.value})} >
                     <option>Select Author</option>
                     {getAuthorsList()}
                 </select>
             </div>
-            <button type="submit">+</button>
+            <p className="success text-right">{successMessage}</p>
+            <p className="error text-right">{errorMessage}</p>
+            <div className="actions">
+                <button type="submit">{loading ? 'Adding...':'Add'}</button>
+                <button type="button" onClick={() => showAddForm('')}>Cancel</button>
+            </div>
         </form>
     );
 
