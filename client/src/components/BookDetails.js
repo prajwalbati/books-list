@@ -1,9 +1,21 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
-import { getBookQuery } from '../queries/queries';
+import { getBookQuery, getBooksQuery, deleteBookMutation } from '../queries/queries';
 
 const BookDetails = ({ bookId }) => {
     const { loading, error, data} = useQuery(getBookQuery, {variables: {id: bookId}});
+    const [ deleteBook ] = useMutation(deleteBookMutation);
+
+    const deleteBookFunc = () => {
+        deleteBook({
+            variables: {id: bookId},
+            refetchQueries: [{query: getBooksQuery}]
+        }).then(data => {
+            console.log(data);
+        }).catch(e => {
+            console.log(e.message);
+        });
+    };
 
     const getBookDetails = () => {
         if (loading) {
@@ -14,9 +26,9 @@ const BookDetails = ({ bookId }) => {
             } else {
                 return (
                     <div>
-                        <h3>{data.book.name}</h3>
-                        <p>{data.book.genre}</p>
-                        <p>{data.book.author.name}</p>
+                        <h3>{data.book.name} <button onClick={deleteBookFunc}>Delete this book</button></h3>
+                        <p>Genre: {data.book.genre}</p>
+                        <p>Author: {data.book.author.name}<button>Delete this author</button></p>
                         <p>All Books by this author:</p>
                         <ul className="other-books">
                             {data.book.author.books.length > 0 && data.book.author.books.map(otherBook => {
