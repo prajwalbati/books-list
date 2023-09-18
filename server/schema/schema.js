@@ -84,6 +84,14 @@ const Mutation = new GraphQLObjectType({
                 return author.save();
             }
         },
+        deleteAuthor: {
+            type: AuthorType,
+            args: { id: { type: GraphQLID } },
+            async resolve(parent, args) {
+                await Book.deleteMany({authorId: args.id});
+                return Author.deleteOne({_id: args.id});
+            }
+        },
         addBook: {
             type: BookType,
             args: {
