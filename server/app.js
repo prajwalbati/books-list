@@ -25,5 +25,6 @@ app.use('/graphql', graphqlHTTP({
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-    console.log(`Server listening on the port: ${PORT}`)
+    console.log(`Server listening on the port: ${PORT}`);
+    console.log(`Go to url for api documentation: http://localhost:${PORT}/graphql`);
 });
